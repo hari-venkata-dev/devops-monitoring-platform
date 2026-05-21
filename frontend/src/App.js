@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={styles.container}>
+      <h1 style={styles.title}>
+        DevOps Monitoring Dashboard
+      </h1>
+
+      <div style={styles.cardContainer}>
+        <div style={styles.card}>
+          <h2>CPU Usage</h2>
+          <p>Loading...</p>
+        </div>
+
+        <div style={styles.card}>
+          <h2>Memory Usage</h2>
+          <p>Loading...</p>
+        </div>
+
+        <div style={styles.card}>
+          <h2>Disk Usage</h2>
+          <p>Loading...</p>
+        </div>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    backgroundColor: "#0f172a",
+    minHeight: "100vh",
+    color: "white",
+    padding: "40px",
+    fontFamily: "Arial"
+  },
+
+  title: {
+    textAlign: "center",
+    marginBottom: "40px"
+  },
+
+  cardContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "20px",
+    flexWrap: "wrap"
+  },
+
+  card: {
+    backgroundColor: "#1e293b",
+    padding: "30px",
+    borderRadius: "12px",
+    width: "250px",
+    textAlign: "center",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.3)"
+  }
+};
 
 export default App;
