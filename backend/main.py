@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import psutil
+from routes.metrics import router as metrics_router
 
 app = FastAPI()
 
@@ -11,10 +11,4 @@ def home():
     }
 
 
-@app.get("/metrics")
-def get_metrics():
-    return {
-        "cpu_usage": psutil.cpu_percent(),
-        "memory_usage": psutil.virtual_memory().percent,
-        "disk_usage": psutil.disk_usage('/').percent
-    }
+app.include_router(metrics_router)
