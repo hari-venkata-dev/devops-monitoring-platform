@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
+
 function App() {
   const [metrics, setMetrics] = useState({
     cpu_usage: 0,
@@ -9,6 +19,8 @@ function App() {
 
   const [status, setStatus] = useState("Connecting...");
   const [lastUpdated, setLastUpdated] = useState("");
+
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     fetchMetrics();
@@ -22,11 +34,22 @@ function App() {
 
   const fetchMetrics = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/metrics");
+      const response = await fetch(
+        "http://127.0.0.1:8000/metrics"
+      );
 
       const data = await response.json();
 
       setMetrics(data);
+
+      setHistory((prevHistory) => [
+        ...prevHistory.slice(-9),
+        {
+          time: new Date().toLocaleTimeString(),
+          cpu: data.cpu_usage,
+          memory: data.memory_usage
+        }
+      ]);
 
       setStatus("Connected");
 
@@ -35,7 +58,10 @@ function App() {
       );
 
     } catch (error) {
-      console.error("Error fetching metrics:", error);
+      console.error(
+        "Error fetching metrics:",
+        error
+      );
 
       setStatus("Backend Disconnected");
     }
@@ -82,7 +108,10 @@ function App() {
 
       <div style={styles.statusContainer}>
         <p>Status: {status}</p>
-        <p>Last Updated: {lastUpdated}</p>
+
+        <p>
+          Last Updated: {lastUpdated}
+        </p>
       </div>
 
       <div style={styles.cardContainer}>
@@ -100,6 +129,60 @@ function App() {
           title="Disk Usage"
           value={metrics.disk_usage}
         />
+      </div>
+
+      <div style={styles.chartContainer}>
+        <div style={styles.chartCard}>
+          <h2>CPU Usage Trend</h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <LineChart data={history}>
+              <CartesianGrid strokeDasharray="3 3" />
+
+              <XAxis dataKey="time" />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Line
+                type="monotone"
+                dataKey="cpu"
+                stroke="#22c55e"
+                strokeWidth={3}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div style={styles.chartCard}>
+          <h2>Memory Usage Trend</h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <LineChart data={history}>
+              <CartesianGrid strokeDasharray="3 3" />
+
+              <XAxis dataKey="time" />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Line
+                type="monotone"
+                dataKey="memory"
+                stroke="#ef4444"
+                strokeWidth={3}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
@@ -132,6 +215,22 @@ const styles = {
     justifyContent: "center",
     gap: "25px",
     flexWrap: "wrap"
+  },
+
+  chartContainer: {
+    marginTop: "50px",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "30px"
+  },
+
+  chartCard: {
+    backgroundColor: "#1e293b",
+    padding: "20px",
+    borderRadius: "16px",
+    width: "600px",
+    color: "white"
   },
 
   card: {
