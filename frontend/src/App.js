@@ -35,7 +35,7 @@ function App() {
   const fetchMetrics = async () => {
     try {
       const response = await fetch(
-  "http://host.docker.internal:8000/metrics"
+  "http://localhost:8000/metrics"
 );
       
 

@@ -1,0 +1,21 @@
+services:
+
+  backend:
+    build: ./backend
+
+    ports:
+      - "8000:8000"
+
+    container_name: monitoring-backend
+
+
+  frontend:
+    build: ./frontend
+
+    ports:
+      - "3000:80"
+
+    container_name: monitoring-frontend
+
+    depends_on:
+      - backend
